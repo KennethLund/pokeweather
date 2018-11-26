@@ -1,0 +1,13 @@
+{
+  "name": "pokeweather",
+  "version": "0.0.1",
+  "description": "Forecasts the in-game weather in Pokemon Go",
+  "main": "bot.js",
+  "keywords": [],
+  "author": "Suzi Ross",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^11.4.2"
+  },
+  "devDependencies": {}
+}
