@@ -1,0 +1,70 @@
+const Discord = module.require("discord.js");
+const superagent = module.require("superagent");
+
+module.exports.run = async (bot, message, args) => {
+
+	let {body} = await superagent
+	.get('http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/124594?apikey=sD1RODtbRUAdED92mbka7PHh7YfoeJuO&details=true&metric=true%20HTTP/1.1');
+	
+	var forecast_weather = [];
+	var forecast_time    = [];
+	var i;
+	
+	for (i = 0; i < 12; i++) { 
+		var datetime = body[i]['DateTime'];
+		var date = datetime.substr(0,10);
+		var time = datetime.substr(11);
+		var time = time.substr(0,5);
+		var weather = body[i]['IconPhrase'];
+		var wind = body[i]['Wind']['Speed']['Value'];
+		
+		
+		if (weather == 'Partly sunny' || weather == 'Intermittent clouds' || weather == 'Partly cloudy' || weather == 'Partly sunny w/ Showers' || weather == 'Partly Cloudy w/ Showers' || weather == 'Partly sunny w/ Flurries' || weather == 'Partly sunny w/ T-Storms' || weather == 'Partly Cloudy w/ T-Storms') {
+            var ingame =  ':partly sunny: Partly cloudy'
+		}    
+        if (weather == 'Mostly cloudy'||weather == 'Cloudy'||weather == 'Mostly cloudy w/ showers'||weather == 'Mostly cloudy w/ T-Storms'||weather == 'Mostly cloudy w/ Flurries'||weather == 'Hazy Sunshine'||weather == 'Hazy Moonlight') {
+            var ingame =  ':cloud: Cloudy'
+		}
+        if (weather == 'Sunny'||weather == 'Clear'||weather == 'Mostly sunny'||weather == 'Mostly clear') {
+            var ingame =  ':sunny: Clear'
+		}
+        if (weather == 'Fog') {
+            var ingame =  ':bidoof: Fog'
+		}
+        if (weather === "Showers" || weather === "Rain" || weather === "T-Storms") {
+            var ingame =  ':cloud_rain: Rainy'
+		}	
+        if (weather == 'Rain and Snow'||weather == 'Flurries'||weather == 'Snow') {
+            var ingame =  ':cloud_snow: Snowy'
+		}
+        if (wind > 14.91) {
+            var ingame =  ':dash: Windy'
+		}
+       
+		forecast_weather.push(ingame);
+		forecast_time.push(time);
+	}
+
+    let embed = new Discord.RichEmbed()
+    .setDescription("Here's the weather for the next 12 hours:")
+    .setColor("#4fd1dd")
+    .addField(forecast_time[0], forecast_weather[0], inline = true)
+    .addField(forecast_time[1], forecast_weather[1], inline = true)
+    .addField(forecast_time[2], forecast_weather[2], inline = true)
+    .addField(forecast_time[3], forecast_weather[3], inline = true)
+    .addField(forecast_time[4], forecast_weather[4], inline = true)
+    .addField(forecast_time[5], forecast_weather[5], inline = true)
+    .addField(forecast_time[6], forecast_weather[6], inline = true)
+    .addField(forecast_time[7], forecast_weather[7], inline = true)
+    .addField(forecast_time[8], forecast_weather[8], inline = true)
+    .addField(forecast_time[9], forecast_weather[9], inline = true)
+    .addField(forecast_time[10], forecast_weather[10], inline = true)
+    .addField(forecast_time[11], forecast_weather[11], inline = true)
+
+    //.setFooter("I only know the weather for the hours shown above. Check back at 10:00 on Tuesday 27th November for a new forecast.")
+    message.channel.send({embed: embed});
+}
+
+module.exports.help = {
+  name: "voldborg"
+}
